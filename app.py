@@ -41,8 +41,9 @@ def track(phone_id):
 def state(phone_id):
     res = cur_state.find({"ID": phone_id}, {'_id': 0})
     try:
-        ret = res.next()
-    except:
+        ret = next(res)
+    except Exception as e:
+        print(e)
         ret = {}
     return jsonify(ret)
 
