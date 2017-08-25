@@ -16,7 +16,13 @@ def main():
     if request.method == 'POST':
         request.json['tstamp'] = datetime.datetime.utcnow()
         data = request.json
-        print(data)
+        data['geopoint'] = {'type': 'Point',
+                            'coordinates':
+                                [
+                                    data['location']['LONG'],
+                                    data['location']['LAT']
+                                ]
+                            }
         cur_state.update({"ID": data["ID"]}, request.json, upsert=True)
         coll.insert(request.json)
         return ''
@@ -33,8 +39,9 @@ def track(phone_id):
                     {'location.LAT': 1, 'location.LONG': 1, 'tstamp': 1, '_id': 0})
     res.sort('tstamp', -1)
     ret = list(map(fixts, res))
+    linestring = list(map(lambda x: [x['location']['LONG'], x['location']['LAT']], ret))
 
-    return jsonify({'ret':ret})
+    return jsonify({'ls': linestring, 'ret':ret})
 
 
 @app.route('/state/<string:phone_id>')
