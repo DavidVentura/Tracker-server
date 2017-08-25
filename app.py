@@ -34,8 +34,8 @@ def main():
 
 @app.route('/track/<string:phone_id>')
 def track(phone_id):
-    six_hours = datetime.datetime.today() - datetime.timedelta(seconds=6*3600)
-    ret = track(phone_id, six_hours)
+    three_hours = datetime.datetime.utcnow() - datetime.timedelta(seconds=3*3600)
+    ret = track(phone_id, three_hours)
     linestring = data_to_linestring(ret)
     filtered = filter_close(linestring, 0.0000003)
 
