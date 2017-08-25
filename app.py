@@ -16,6 +16,9 @@ def main():
     if request.method == 'POST':
         request.json['tstamp'] = datetime.datetime.utcnow()
         data = request.json
+        if 'location' not in data:
+            # I do not care about points with no location
+            return ''
         data['geopoint'] = {'type': 'Point',
                             'coordinates':
                                 [
