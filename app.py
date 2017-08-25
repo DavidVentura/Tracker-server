@@ -17,7 +17,7 @@ def main():
         request.json['tstamp'] = datetime.datetime.utcnow()
         data = request.json
         print(data)
-        cur_state.update({"ID": data["ID"]}, request.json, {'upsert': True})
+        cur_state.update({"ID": data["ID"]}, request.json, upsert=True)
         coll.insert(request.json)
         return ''
 
