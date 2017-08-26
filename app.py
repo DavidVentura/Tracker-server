@@ -47,6 +47,7 @@ def state(phone_id):
     res = cur_state.find({"ID": phone_id}, {'_id': 0})
     try:
         ret = next(res)
+        ret['tstamp'] = ret['tstamp'].timestamp()
     except Exception as e:
         print(e)
         ret = {}
