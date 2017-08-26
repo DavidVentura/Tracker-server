@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>Quick Start - Leaflet</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
+
+
+    
+</head>
+<body>
+
+
+
+<div id="mapid" style="width: 800px; height: 600px;"></div>
+<script>
+
+    var mymap = L.map('mapid').setView([-34.590, -58.432], 15);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+
+    const urls = ["https://tracker.davidventura.com.ar/track/ce756f3b-475d-4c60-845b-6313c3d9869a",
+                  "https://tracker.davidventura.com.ar/track/b4bc2e49-9050-4d28-8f39-087ed5360a3d",
+                  //"https://tracker.davidventura.com.ar/track/7311fb27-98ba-40a7-b0ce-6eb9783b0060"
+                  ]
+    const colors = ['#0000bb', '#bb0000', '#000000'];
+
+    for(let idx in urls) {
+        url = urls[idx];
+        fetch(url).then(
+            resp => {
+                if(resp.ok)
+                    resp.json().then(json => {
+                        if (json.ls.length === 0)
+                            return;
+                        console.log(json.ls.length);
+                        // const fixed = json.ls.map( x => [ x[1], x[0] ] );
+                        L.polyline(json.ls, { color: colors[idx] }).addTo(mymap);
+                        L.marker(json.ls[0]).addTo(mymap);
+                        for(let item of json.ls){
+                            L.circle(item, {
+                                color: colors[idx],
+                                fillColor: colors[idx],
+                                fillOpacity: 0.5,
+                                radius: 5
+                            }).addTo(mymap);
+                        }
+                    });
+            }
+        );
+     }
+</script>
+</body>
+</html>
+
