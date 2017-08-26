@@ -54,6 +54,11 @@ def state(phone_id):
     return jsonify(ret)
 
 
+@app.route('/map')
+def map_view():
+    return open('map.html').read()
+
+
 def fixts(item):
     item['tstamp'] = item['tstamp'].timestamp()
     return item
@@ -74,6 +79,8 @@ def distance(p, q):
 
 
 def filter_close(points, dst):
+    if len(points) == 0:
+        return []
     ret = [points[0]]
     for idx in range(len(points) - 1):
         if distance(ret[-1], points[idx]) > dst:
